@@ -15,6 +15,14 @@ public class Record {
         this.time = time;
     }
 
+    public Record(String userId, String foodName, int calories, long time, String foodImageURL) {
+        this.userId = userId;
+        this.foodName = foodName;
+        this.calories = calories;
+        this.time = time;
+        this.foodImageURL = foodImageURL;
+    }
+
     public String getUserId() {
         return userId;
     }
