@@ -20,8 +20,8 @@ import java.util.Map;
 public class TrackDAO {
     private static final String TableName = "cal_track";
 
-    private static final String HandleAttr = "userId";
-    private static final String TimestampAttr = "time";
+    private static final String HandleAttr = "alias";
+    private static final String TimestampAttr = "ms_time";
     private static final String FNameAttr = "food_name";
     private static final String CalAttr = "calories";
     private static final String ImageAttr = "image_url";

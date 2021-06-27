@@ -5,7 +5,7 @@ import me.jinxinyu.caltracker.domain.User;
 /**
  * User Register One-time Response
  */
-public final class RegisterResponse extends Response{
+public class RegisterResponse extends Response{
 
     private User user;
     private String authToken;
@@ -24,5 +24,13 @@ public final class RegisterResponse extends Response{
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }
