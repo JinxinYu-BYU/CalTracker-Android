@@ -1,8 +1,9 @@
 package me.jinxinyu.caltracker.service;
 
-import me.jinxinyu.caltracker.service.request.AddTrackRequest;
+import me.jinxinyu.caltracker.service.request.RecordRequest;
 import me.jinxinyu.caltracker.service.response.AddTrackResponse;
+import me.jinxinyu.caltracker.service.response.RecordResponse;
 
 public interface AddTrackService {
-    AddTrackResponse addTrack(AddTrackRequest addTrackRequest);
+    RecordResponse addTrack(RecordRequest addTrackRequest);
 }

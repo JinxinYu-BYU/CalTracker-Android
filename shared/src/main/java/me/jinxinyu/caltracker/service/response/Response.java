@@ -1,13 +1,17 @@
 package me.jinxinyu.caltracker.service.response;
 
-class Response {
+public class Response {
 
     private final boolean success;
-    private final String message;
+    private String message;
 
+//
+//    Response(String message) {
+//        this(false, null);
+//    }
 
-    Response(String message) {
-        this(false, null);
+    public Response(boolean success) {
+        this.success = success;
     }
 
     /**

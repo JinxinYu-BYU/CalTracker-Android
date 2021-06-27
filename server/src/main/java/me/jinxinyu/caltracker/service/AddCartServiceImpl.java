@@ -5,7 +5,7 @@ import me.jinxinyu.caltracker.service.request.RecordRequest;
 import me.jinxinyu.caltracker.service.response.AddTrackResponse;
 import me.jinxinyu.caltracker.service.response.RecordResponse;
 
-public class AddTrackServiceImpl extends ServiceImpl implements AddTrackService{
+public class AddCartServiceImpl extends ServiceImpl implements AddTrackService{
     @Override
     public RecordResponse addTrack(RecordRequest addTrackRequest) {
 //        validateToken(addTrackRequest.getAuthToken());
