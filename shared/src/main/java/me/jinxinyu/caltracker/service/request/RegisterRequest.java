@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * User Register Request
  */
-public final class RegisterRequest {
+public class RegisterRequest {
 
     private String firstName;
     private String lastName;
@@ -64,6 +64,38 @@ public final class RegisterRequest {
 
     public int getAge() {
         return age;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
 

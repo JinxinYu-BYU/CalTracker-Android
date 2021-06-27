@@ -10,8 +10,8 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 public class  AuthsDAO {
 
     private static final String TableName = "cal_auth";
-    private static final String TimestampAttr = "time";
-    private static final String TokenAttr = "token";
+    private static final String TimestampAttr = "ms_time";
+    private static final String TokenAttr = "authtoken";
 
 
 

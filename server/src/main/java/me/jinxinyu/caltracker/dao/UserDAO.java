@@ -47,7 +47,7 @@ public class UserDAO {
     /**
      * User Login Function
      */
-    public LoginResponse login(LoginRequest request) {
+    public static LoginResponse login(LoginRequest request) {
         Item item = TABLE.getItem(HANDLE_ATTR, request.getUsername());
         if (item == null) return new LoginResponse("Invalid username");
 
@@ -69,7 +69,7 @@ public class UserDAO {
 
     }
 
-    public static RegisterResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
 
         // Check if username has already been taken
         if (TABLE.getItem(HANDLE_ATTR, request.getUserName()) != null) {
@@ -91,11 +91,6 @@ public class UserDAO {
                 request.getImageUrl());
 
         return new RegisterResponse(user, "token");
-    }
-
-    public static void main(String[] args) {
-        register(new RegisterRequest("val","wu", "val123", "123",
-                "", 0, 0, 0));
     }
 
 
