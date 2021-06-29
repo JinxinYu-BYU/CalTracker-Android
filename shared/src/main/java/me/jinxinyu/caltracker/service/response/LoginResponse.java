@@ -7,7 +7,7 @@ import me.jinxinyu.caltracker.domain.User;
  *
  * @author Valentine
  */
-public final class LoginResponse extends Response{
+public class LoginResponse extends Response{
 
     private User user;
     private String authToken;
@@ -49,5 +49,13 @@ public final class LoginResponse extends Response{
      */
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

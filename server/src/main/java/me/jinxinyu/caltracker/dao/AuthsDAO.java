@@ -7,7 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 
-public class  AuthsDAO {
+public class AuthsDAO {
 
     private static final String TableName = "cal_auth";
     private static final String TimestampAttr = "ms_time";
