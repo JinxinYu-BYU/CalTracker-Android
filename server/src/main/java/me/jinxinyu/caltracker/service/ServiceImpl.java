@@ -35,6 +35,7 @@ public class ServiceImpl {
 
         if (curr_time - timestamp > diff) {
             System.out.println("invalid token: the token doesn't exist");
+            // TODO: LOGOUT USER
             throw new RuntimeException("401");
         }
     }

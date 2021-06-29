@@ -28,7 +28,8 @@ public class User implements Comparable<User>, Serializable {
         this.imageUrl = imageURL;
     }
 
-    public User(String firstName, String lastName, String userId, String imageUrl, int weight, int height, int age) {
+    public User(String firstName, String lastName, String userId, String imageUrl,
+                int weight, int height, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userId = userId;

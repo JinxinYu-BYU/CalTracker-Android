@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 import me.jinxinyu.caltracker.domain.User;
 import me.jinxinyu.caltracker.service.request.LoginRequest;
 import me.jinxinyu.caltracker.service.request.RegisterRequest;
+import me.jinxinyu.caltracker.service.response.DeleteAccountResponse;
 import me.jinxinyu.caltracker.service.response.LoginResponse;
 import me.jinxinyu.caltracker.service.response.RegisterResponse;
 
@@ -88,9 +89,15 @@ public class UserDAO {
         TABLE.putItem(account);
 
         User user = new User(request.getFirstName(), request.getLastName(), request.getUserName(),
-                request.getImageUrl());
+                request.getImageUrl(), request.getWeight(), request.getHeight(), request.getAge());
 
         return new RegisterResponse(user, "token");
+    }
+
+    // May need modifications
+    public DeleteAccountResponse delete(User user) {
+        TABLE.deleteItem(HANDLE_ATTR, user.getUserId());
+        return new DeleteAccountResponse();
     }
 
 
