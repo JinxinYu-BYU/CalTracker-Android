@@ -12,6 +12,7 @@ public class AuthsDAO {
     private static final String TableName = "cal_auth";
     private static final String TimestampAttr = "ms_time";
     private static final String TokenAttr = "authtoken";
+    // TODO: add user alias for validation
 
 
 
