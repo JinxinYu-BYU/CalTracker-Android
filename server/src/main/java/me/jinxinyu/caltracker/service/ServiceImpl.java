@@ -14,10 +14,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Base64;
+import java.util.UUID;
 
 public class ServiceImpl {
     public void validateToken(String token) {
         long diff = 72000000L;   // Tokens valid for one hour
+        long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
         if (token == null || token.isEmpty()) {
             throw new RuntimeException("401");
@@ -32,6 +34,13 @@ public class ServiceImpl {
         long timestamp = Long.parseLong(resp);
 
         long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
+
+        if(curr_time - timestamp > newTokenTime && curr_time - timestamp < diff){
+            String newToken = UUID.randomUUID().toString();
+            long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
+            authsDAO.addToken(token, new_curr_time);
+//            response.setAuthToken(token);
+        }
 
         if (curr_time - timestamp > diff) {
             System.out.println("invalid token: the token doesn't exist");
