@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TrackDAO {
-    private static String TABLE_NAME = "cal_track";
 
+    private static String TABLE_NAME = "cal_track";
     private static final String HANDLE_ATTR = "alias";
     private static final String TIME_ATTR = "ms_time";
     private static final String FOOD_NAME_ATTR = "food_name";
