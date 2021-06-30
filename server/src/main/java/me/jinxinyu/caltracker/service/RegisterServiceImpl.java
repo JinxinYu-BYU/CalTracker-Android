@@ -31,7 +31,7 @@ public class RegisterServiceImpl extends ServiceImpl implements RegisterService 
         if (response.isSuccess()) {
             String token = UUID.randomUUID().toString();
             long currTime = new Timestamp(System.currentTimeMillis()).getTime();
-            authsDAO.addToken(token, currTime);
+            authsDAO.addToken(token, currTime, request.getUserName());
             response.setAuthToken(token);
         }
         return response;

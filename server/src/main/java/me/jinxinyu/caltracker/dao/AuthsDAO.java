@@ -7,14 +7,15 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AuthsDAO {
 
-    private static final String TableName = "cal_auth";
-    private static final String TimestampAttr = "ms_time";
-    private static final String TokenAttr = "authtoken";
-    // TODO: add user alias for validation
-
-
+    private static final String TABLE_NAME = "cal_auth";
+    private static final String TIMESTAMP_ATTR = "ms_time";
+    private static final String TOKEN_ATTR = "authtoken";
+    private static final String ALIAS_ATTR ="alias";
 
     // DynamoDB client
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
@@ -23,27 +24,30 @@ public class AuthsDAO {
             .build();
     private static DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
 
-    public void addToken(String token, long timestamp) {
-        Table table = dynamoDB.getTable(TableName);
+    public void addToken(String token, long timestamp, String alias) {
+        Table table = dynamoDB.getTable(TABLE_NAME);
 
         Item item = new Item()
-                .withPrimaryKey(TokenAttr, token)
-                .withNumber(TimestampAttr, timestamp);
+                .withPrimaryKey(TOKEN_ATTR, token)
+                .withString(ALIAS_ATTR, alias)
+                .withNumber(TIMESTAMP_ATTR, timestamp);
         table.putItem(item);
     }
 
-    public String getToken(String token) {
-        Table table = dynamoDB.getTable(TableName);
-        Item item = table.getItem(TokenAttr, token);
+    public Map<String, String> getToken(String token) {
+        Table table = dynamoDB.getTable(TABLE_NAME);
+        Item item = table.getItem(TOKEN_ATTR, token);
         if (item == null) {
             return null;
         }
-
-        return item.getString(TimestampAttr);
+        Map<String, String> map = new HashMap<>();
+        map.put(ALIAS_ATTR, item.getString(ALIAS_ATTR));
+        map.put(TIMESTAMP_ATTR, item.getString(TIMESTAMP_ATTR));
+        return map;
     }
 
     public void deleteToken(String token) {
-        Table table = dynamoDB.getTable(TableName);
-        table.deleteItem(TokenAttr, token);
+        Table table = dynamoDB.getTable(TABLE_NAME);
+        table.deleteItem(TOKEN_ATTR, token);
     }
 }

@@ -14,10 +14,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Base64;
+import java.util.Map;
 import java.util.UUID;
 
 public class ServiceImpl {
-    public void validateToken(String token) {
+    private static final String TIMESTAMP_ATTR = "ms_time";
+    private static final String ALIAS_ATTR ="alias";
+
+    public String validateToken(String token, String alias) {
         long diff = 72000000L;   // Tokens valid for one hour
         long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
@@ -26,27 +30,32 @@ public class ServiceImpl {
         }
 
         AuthsDAO authsDAO = new AuthsDAO();
-        String resp = authsDAO.getToken(token);
-        if (resp == null || resp.isEmpty()) {
+        Map<String, String> map = authsDAO.getToken(token);
+        if (map == null || map.get(TIMESTAMP_ATTR).isEmpty() || map.get(ALIAS_ATTR).isEmpty()) {
+            throw new RuntimeException("401");
+        }
+        if(!map.get(ALIAS_ATTR).equals(alias)){
             throw new RuntimeException("401");
         }
 
-        long timestamp = Long.parseLong(resp);
+        long timestamp = Long.parseLong(map.get(TIMESTAMP_ATTR));
 
         long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
 
         if(curr_time - timestamp > newTokenTime && curr_time - timestamp < diff){
             String newToken = UUID.randomUUID().toString();
             long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
-            authsDAO.addToken(token, new_curr_time);
-//            response.setAuthToken(token);
+            authsDAO.deleteToken(token);
+            authsDAO.addToken(token, new_curr_time, alias);
+            return newToken;
         }
 
         if (curr_time - timestamp > diff) {
             System.out.println("invalid token: the token doesn't exist");
-            // TODO: LOGOUT USER
+            authsDAO.deleteToken(token);
             throw new RuntimeException("401");
         }
+        return token;
     }
 
     public static String generateHash(String password) {
