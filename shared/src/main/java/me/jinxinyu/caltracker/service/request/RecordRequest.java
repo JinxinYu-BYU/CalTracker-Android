@@ -2,13 +2,13 @@ package me.jinxinyu.caltracker.service.request;
 
 import me.jinxinyu.caltracker.domain.Record;
 
-public class AddTrackRequest {
+public class RecordRequest {
     private Record record;
     private String authToken;
 
-    public AddTrackRequest(){}
+    public RecordRequest(){}
 
-    public AddTrackRequest(Record record, String authToken) {
+    public RecordRequest(Record record, String authToken) {
         this.record = record;
         this.authToken = authToken;
     }

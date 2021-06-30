@@ -1,34 +1,34 @@
 package me.jinxinyu.caltracker.domain;
 
 public class Record {
-    private String userId;
+    private String alias;
     private String foodName;
     private int calories;
     private long time;
     //optional
     private String foodImageURL;
 
-    public Record(String userId, String foodName, int calories, long time) {
-        this.userId = userId;
+    public Record(String alias, String foodName, int calories, long time) {
+        this.alias = alias;
         this.foodName = foodName;
         this.calories = calories;
         this.time = time;
     }
 
-    public Record(String userId, String foodName, int calories, long time, String foodImageURL) {
-        this.userId = userId;
+    public Record(String alias, String foodName, int calories, long time, String foodImageURL) {
+        this.alias = alias;
         this.foodName = foodName;
         this.calories = calories;
         this.time = time;
         this.foodImageURL = foodImageURL;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getFoodName() {

@@ -1,14 +1,13 @@
 package me.jinxinyu.caltracker.service.response;
 
-public class AddTrackResponse extends Response{
+public class RecordResponse extends Response{
 
 
-    public AddTrackResponse() {
-
+    public RecordResponse() {
         super(false, "Failed to add food to the track");
     }
 
-    public AddTrackResponse(boolean success) {
+    public RecordResponse(boolean success) {
         super(success, "Successfully add food to the track");
     }
 }

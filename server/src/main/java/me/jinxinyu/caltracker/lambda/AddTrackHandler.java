@@ -4,13 +4,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import me.jinxinyu.caltracker.service.AddTrackService;
 import me.jinxinyu.caltracker.service.AddTrackServiceImpl;
-import me.jinxinyu.caltracker.service.request.AddTrackRequest;
-import me.jinxinyu.caltracker.service.response.AddTrackResponse;
+import me.jinxinyu.caltracker.service.request.RecordRequest;
+import me.jinxinyu.caltracker.service.response.RecordResponse;
 
 
-public class AddTrackHandler implements RequestHandler<AddTrackRequest, AddTrackResponse> {
+public class AddTrackHandler implements RequestHandler<RecordRequest, RecordResponse> {
     @Override
-    public AddTrackResponse handleRequest(AddTrackRequest request, Context context) {
+    public RecordResponse handleRequest(RecordRequest request, Context context) {
 
         AddTrackService service;
         if (request.getRecord() == null) {
