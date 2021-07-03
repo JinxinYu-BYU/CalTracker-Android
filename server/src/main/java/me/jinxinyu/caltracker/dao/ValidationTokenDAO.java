@@ -1,20 +1,11 @@
 package me.jinxinyu.caltracker.dao;
 
-
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
 import me.jinxinyu.caltracker.net.DBRemoteException;
 
 import java.util.Map;
 
-public class AuthsDAO {
-
-    private static final String TABLE_NAME= "cal_auth";
+public class ValidationTokenDAO {
+    private static final String TABLE_NAME= "cal_vali";
 
     public void addToken(String token, long timestamp, String alias) throws DBRemoteException {
         TokenDAO.addToken(token, timestamp, alias, TABLE_NAME);
