@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import me.jinxinyu.caltracker.dao.AuthsDAO;
+import me.jinxinyu.caltracker.net.DBRemoteException;
+import me.jinxinyu.caltracker.service.request.LogoutRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,10 +20,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ServiceImpl {
-    private static final String TIMESTAMP_ATTR = "ms_time";
-    private static final String ALIAS_ATTR ="alias";
 
-    public String validateToken(String token, String alias) {
+
+    public static String validateToken(String token, String alias) {
         long diff = 72000000L;   // Tokens valid for one hour
         long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
@@ -30,31 +31,39 @@ public class ServiceImpl {
             throw new RuntimeException("401");
         }
 
-        AuthsDAO authsDAO = new AuthsDAO();
-        Map<String, String> map = authsDAO.getToken(token);
-        if (map == null || map.get(TIMESTAMP_ATTR).isEmpty() || map.get(ALIAS_ATTR).isEmpty()) {
-            throw new RuntimeException("401");
-        }
-        if(!map.get(ALIAS_ATTR).equals(alias)){
-            throw new RuntimeException("401");
-        }
 
-        long timestamp = Long.parseLong(map.get(TIMESTAMP_ATTR));
+        try {
+            AuthsDAO authsDAO = new AuthsDAO();
+            Map.Entry<String, String> resp = authsDAO.getToken(token);
+            if (resp == null || resp.getKey() == null || resp.getValue() == null) {
+                throw new RuntimeException("401");
+            }
 
-        long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
+            if (!resp.getKey().equals(alias)) throw new RuntimeException("401");
 
-        if(curr_time - timestamp > newTokenTime && curr_time - timestamp < diff){
-            String newToken = UUID.randomUUID().toString();
-            long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
-            authsDAO.deleteToken(token);
-            authsDAO.addToken(token, new_curr_time, alias);
-            return newToken;
-        }
+            long timestamp = Long.parseLong(resp.getValue());
+            long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
 
-        if (curr_time - timestamp > diff) {
-            System.out.println("invalid token: the token doesn't exist");
-            authsDAO.deleteToken(token);
-            throw new RuntimeException("401");
+
+            if (curr_time - timestamp > newTokenTime && curr_time - timestamp < diff) {
+                String newToken = UUID.randomUUID().toString();
+                long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
+                authsDAO.deleteToken(token);
+                authsDAO.addToken(newToken, new_curr_time, alias);
+                return newToken;
+            }
+
+            if (curr_time - timestamp > diff) {
+                System.out.println("invalid token: the token doesn't exist");
+
+                // logout user
+                authsDAO.deleteToken(token);
+
+                throw new RuntimeException("401");
+            }
+        } catch (DBRemoteException e) {
+            throw new RuntimeException(e.getMessage());
+
         }
         return token;
     }
@@ -75,7 +84,7 @@ public class ServiceImpl {
         }
     }
 
-    public String uploadImage(String imageString, String alias) throws IOException {
+    public static String uploadImage(String imageString, String alias) throws IOException {
 
         byte[] image = Base64.getDecoder().decode(imageString);
 
