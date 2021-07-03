@@ -60,7 +60,7 @@ public class TrackDAO {
                         .withString(":v_id", recordRequest.getUserId())
                         .withNumber(":v", recordRequest.getTimeStart())
                         .withNumber(":e", recordRequest.getTimeEnd()))
-                .withMaxResultSize(10)
+                .withMaxResultSize(recordRequest.getLimit())
                 .withConsistentRead(true)
                 .withExclusiveStartKey(HANDLE_ATTR, recordRequest.getLastRecord().getAlias(), TIME_ATTR, recordRequest.getLastRecord().getTime());
 

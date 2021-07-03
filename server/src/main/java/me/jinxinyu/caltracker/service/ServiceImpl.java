@@ -26,6 +26,7 @@ public class ServiceImpl {
         long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
         if (token == null || token.isEmpty()) {
+            //TODO: is runtime exception a good practice?
             throw new RuntimeException("401");
         }
 
