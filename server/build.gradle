@@ -12,6 +12,7 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-sqs:1.11.761'
     implementation 'com.amazonaws:aws-lambda-java-events:2.2.7'
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.720'
     runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.2.0'
 }
 
