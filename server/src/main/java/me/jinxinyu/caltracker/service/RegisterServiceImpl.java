@@ -38,6 +38,7 @@ public class RegisterServiceImpl extends ServiceImpl implements RegisterService 
             return response;
         } catch (DBRemoteException e) {
             return new RegisterResponse(String.format(ERROR_MESSAGE, e.getErrorType(), e.getMessage()));
+
         }
     }
 }

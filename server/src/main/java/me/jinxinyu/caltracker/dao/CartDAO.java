@@ -6,6 +6,9 @@ import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import me.jinxinyu.caltracker.domain.Record;
 import me.jinxinyu.caltracker.service.request.CheckoutCartRequest;
 import me.jinxinyu.caltracker.service.request.GetRecordRequest;
@@ -14,7 +17,9 @@ import me.jinxinyu.caltracker.service.response.GetRecordResponse;
 import me.jinxinyu.caltracker.service.response.RecordResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartDAO{
     private static String TABLE_NAME = "cal_track";
@@ -50,7 +55,10 @@ public class CartDAO{
         QuerySpec spec = new QuerySpec()
                 .withKeyConditionExpression("alias = :v_id")
                 .withValueMap(new ValueMap()
-                        .withString(":v_id", checkoutCartRequest.getAlias()));
+                        .withString(":v_id", checkoutCartRequest.getAlias()))
+                .withMaxResultSize(10)
+                .withConsistentRead(true)
+                .withExclusiveStartKey(HANDLE_ATTR, checkoutCartRequest.getLastRecord().getAlias(), TIME_ATTR, checkoutCartRequest.getLastRecord().getTime());
 
         ItemCollection<QueryOutcome> items = table.query(spec);
         List<Record> records = new ArrayList<>();
@@ -72,8 +80,6 @@ public class CartDAO{
                 System.err.println("Unable to delete item: " + record.getAlias() + " " + record.getTime());
                 System.err.println(e.getMessage());
             }
-
-            TrackDAO.addRecordBatch(records);
         }
 
     }

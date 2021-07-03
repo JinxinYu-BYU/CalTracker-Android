@@ -18,4 +18,8 @@ public class RegisterHandler implements RequestHandler<RegisterRequest, Register
         RegisterServiceImpl service = new RegisterServiceImpl();
         return service.register(request);
     }
+
+    public static void main(String[] args) {
+        RegisterRequest r = new RegisterRequest("mike", "wu", "mike1", "123", "", 40, 180, 20);
+    }
 }

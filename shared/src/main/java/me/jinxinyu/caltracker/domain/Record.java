@@ -8,6 +8,9 @@ public class Record {
     //optional
     private String foodImageURL;
 
+    public Record() {
+    }
+
     public Record(String alias, String foodName, int calories, long time) {
         this.alias = alias;
         this.foodName = foodName;

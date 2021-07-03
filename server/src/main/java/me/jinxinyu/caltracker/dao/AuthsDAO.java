@@ -26,5 +26,6 @@ public class AuthsDAO {
 
     public void deleteToken(String token) throws DBRemoteException {
         TokenDAO.deleteToken(token, TABLE_NAME);
+
     }
 }

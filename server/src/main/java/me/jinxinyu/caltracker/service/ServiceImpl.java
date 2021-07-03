@@ -21,13 +21,16 @@ import java.util.UUID;
 
 public class ServiceImpl {
 
-    public static void validateToken(String token, String alias) {
+
+    public static String validateToken(String token, String alias) {
         long diff = 72000000L;   // Tokens valid for one hour
         long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
         if (token == null || token.isEmpty()) {
+            //TODO: is runtime exception a good practice?
             throw new RuntimeException("401");
         }
+
 
         try {
             AuthsDAO authsDAO = new AuthsDAO();
@@ -41,11 +44,13 @@ public class ServiceImpl {
             long timestamp = Long.parseLong(resp.getValue());
             long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
 
+
             if (curr_time - timestamp > newTokenTime && curr_time - timestamp < diff) {
                 String newToken = UUID.randomUUID().toString();
                 long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
                 authsDAO.deleteToken(token);
-                authsDAO.addToken(token, new_curr_time, alias);
+                authsDAO.addToken(newToken, new_curr_time, alias);
+                return newToken;
             }
 
             if (curr_time - timestamp > diff) {
@@ -58,7 +63,9 @@ public class ServiceImpl {
             }
         } catch (DBRemoteException e) {
             throw new RuntimeException(e.getMessage());
+
         }
+        return token;
     }
 
     public static String generateHash(String password) {
