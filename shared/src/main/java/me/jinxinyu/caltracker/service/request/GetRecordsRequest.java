@@ -3,25 +3,12 @@ package me.jinxinyu.caltracker.service.request;
 
 import me.jinxinyu.caltracker.domain.Record;
 
-public class GetTimedRecordRequest {
+public class GetRecordsRequest {
     private Record lastRecord;
     private String alias;
     private int limit;
-    private int timeStart;
-    private int timeEnd;
     private String token;
-
-    public GetTimedRecordRequest(Record lastRecord, String alias, int limit, int timeStart, int timeEnd, String token) {
-        this.lastRecord = lastRecord;
-        this.alias = alias;
-        this.limit = limit;
-        this.timeStart = timeStart;
-        this.timeEnd = timeEnd;
-        this.token = token;
-    }
-
-    public GetTimedRecordRequest() {
-    }
+    private String type;
 
     public String getToken() {
         return token;
@@ -31,20 +18,23 @@ public class GetTimedRecordRequest {
         this.token = token;
     }
 
-    public int getTimeStart() {
-        return timeStart;
+    public GetRecordsRequest() {
     }
 
-    public void setTimeStart(int timeStart) {
-        this.timeStart = timeStart;
+    public String getType() {
+        return type;
     }
 
-    public int getTimeEnd() {
-        return timeEnd;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setTimeEnd(int timeEnd) {
-        this.timeEnd = timeEnd;
+    public GetRecordsRequest(Record lastRecord, String alias, int limit, String token, String type) {
+        this.lastRecord = lastRecord;
+        this.alias = alias;
+        this.limit = limit;
+        this.token = token;
+        this.type = type;
     }
 
     public Record getLastRecord() {

@@ -13,8 +13,8 @@ public class CheckoutCartServiceImpl extends ServiceImpl implements CheckoutCart
 
     @Override
     public ClearCartResponse checkoutCart(CheckoutCartRequest checkoutCartRequest) {
-        String token = validateToken(checkoutCartRequest.getAuthToken(), checkoutCartRequest.getAlias());
-//        return getCartDAO().checkoutCart(checkoutCartRequest);
-        return null;
+//        String token = validateToken(checkoutCartRequest.getAuthToken(), checkoutCartRequest.getAlias());
+        return getCartDAO().checkoutCart(checkoutCartRequest);
+//        return null;
     }
 }

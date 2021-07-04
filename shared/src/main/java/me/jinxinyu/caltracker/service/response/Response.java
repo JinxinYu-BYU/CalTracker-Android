@@ -2,7 +2,7 @@ package me.jinxinyu.caltracker.service.response;
 
 public class Response {
 
-    private final boolean success;
+    private boolean success;
     private String message;
 
 //
@@ -10,9 +10,9 @@ public class Response {
 //        this(false, null);
 //    }
 
-    public Response(boolean success) {
-        this.success = success;
-    }
+//    public Response(boolean success) {
+//        this.success = success;
+//    }
 
     /**
      * Creates an instance.
@@ -20,11 +20,17 @@ public class Response {
      * @param success the success indicator.
      * @param message the error message.
      */
-    Response(boolean success, String message) {
+    public Response(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
     /**
      * Indicates whether the response represents a successful result.
      *
