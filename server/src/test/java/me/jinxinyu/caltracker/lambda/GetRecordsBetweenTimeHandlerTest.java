@@ -4,24 +4,22 @@ import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import me.jinxinyu.caltracker.dao.AuthsDAO;
 import me.jinxinyu.caltracker.domain.Record;
 import me.jinxinyu.caltracker.net.JsonSerializer;
-import me.jinxinyu.caltracker.service.request.CheckoutCartRequest;
-import me.jinxinyu.caltracker.service.request.RecordRequest;
+import me.jinxinyu.caltracker.service.request.GetTimedRecordRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CheckoutCartHandlerTest {
+class GetRecordsBetweenTimeHandlerTest {
     private Context context;
 
 
     @BeforeEach
     void setUp() {
-     context = new Context() {
+        context = new Context() {
             @Override
             public String getAwsRequestId() {
                 return null;
@@ -85,15 +83,12 @@ class CheckoutCartHandlerTest {
 
     @Test
     void handleRequest() {
-//        CheckoutCartRequest checkoutCartRequest = new CheckoutCartRequest("userId", "01234");
-//        String json = JsonSerializer.serialize(checkoutCartRequest);
-//        System.out.println(json);
-//        CheckoutCartHandler checkoutCartHandler = new CheckoutCartHandler();
-//        checkoutCartHandler.handleRequest(checkoutCartRequest, context);
-        Record record =  new Record("user", "item0", 0, 0 );
-        RecordRequest recordRequest = new RecordRequest(record, "abcde", "cart");
-        DeleteRecordHandler deleteRecordHandler = new DeleteRecordHandler();
-        deleteRecordHandler.handleRequest(recordRequest, context);
-
+        GetTimedRecordRequest getTimedRecordRequest = new GetTimedRecordRequest();
+        Record lastRecord = new Record("user0",null, 0,51);
+        getTimedRecordRequest = new GetTimedRecordRequest(lastRecord,"user0", 25, 5, 50, "abcdef");
+        String json = JsonSerializer.serialize(getTimedRecordRequest);
+        System.out.println(json);
+        GetRecordsBetweenTimeHandler getRecordsBetweenTimeHandler = new GetRecordsBetweenTimeHandler();
+        getRecordsBetweenTimeHandler.handleRequest(getTimedRecordRequest,context);
     }
 }

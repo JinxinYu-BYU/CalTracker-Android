@@ -58,7 +58,7 @@ public class TrackDAO {
                         .withNumber(":e", recordRequest.getTimeEnd()))
                 .withMaxResultSize(recordRequest.getLimit())
                 .withConsistentRead(true)
-                .withExclusiveStartKey(HANDLE_ATTR, recordRequest.getLastRecord().getAlias(), TIME_ATTR, recordRequest.getLastRecord().getTime());
+                .withExclusiveStartKey(HANDLE_ATTR, recordRequest.getAlias(), TIME_ATTR, recordRequest.getLastRecord().getTime());
 
         ItemCollection<QueryOutcome> items = table.query(spec);
         List<Record> records = new ArrayList<>();
@@ -77,7 +77,6 @@ public class TrackDAO {
             hasMore = true;
         }
         return new GetRecordsResponse(records,hasMore);
-
 
     }
 
