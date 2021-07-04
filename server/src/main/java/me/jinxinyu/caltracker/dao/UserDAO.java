@@ -131,6 +131,16 @@ public class UserDAO {
         }
     }
 
+    public static void resetPassword(String password) throws DBRemoteException {
+        try {
+            TABLE.updateItem(PASSWORD_ATTR, password);
+        } catch (AmazonServiceException ase) {
+            throw new DBRemoteException(ase.getMessage(), "Service Exception: " + ase.getErrorType());
+        } catch (AmazonClientException ace) {
+            throw new DBRemoteException(ace.getMessage(), "Client Exception");
+        }
+    }
+
 
 
 
