@@ -3,20 +3,16 @@ package me.jinxinyu.caltracker.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
-import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.amazonaws.services.dynamodbv2.model.WriteRequest;
 import me.jinxinyu.caltracker.domain.Record;
-import me.jinxinyu.caltracker.service.request.GetRecordRequest;
+import me.jinxinyu.caltracker.service.request.GetRecordsRequest;
 import me.jinxinyu.caltracker.service.request.GetTimedRecordRequest;
 import me.jinxinyu.caltracker.service.request.RecordRequest;
-import me.jinxinyu.caltracker.service.response.AddTrackResponse;
-import me.jinxinyu.caltracker.service.response.GetRecordResponse;
-import me.jinxinyu.caltracker.service.response.RecordResponse;
+import me.jinxinyu.caltracker.service.response.GetRecordsResponse;
+import me.jinxinyu.caltracker.service.response.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,23 +37,23 @@ public class TrackDAO {
     private static DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
     private Table table = dynamoDB.getTable(TABLE_NAME);
 
-    public RecordResponse addTrack(RecordRequest request) {
-        return new RecordResponse(DAO.addRecord("cal_track", request));
+    public static Response addRecord(RecordRequest request) {
+        return DAO.addRecord("cal_track", request);
     }
 
-    public GetRecordResponse getRecords(GetRecordRequest request) {
+    public GetRecordsResponse getRecords(GetRecordsRequest request) {
         return DAO.getRecords(TABLE_NAME, request);
     }
 
-    public GetRecordResponse getRecordsBetweenTime(GetTimedRecordRequest recordRequest){
+    public GetRecordsResponse getRecordsBetweenTime(GetTimedRecordRequest recordRequest){
         Map<String, AttributeValue> startKey = new HashMap<>();
-        startKey.put("authtoken", new AttributeValue().withS(recordRequest.getUserId()));
+        startKey.put("authtoken", new AttributeValue().withS(recordRequest.getAlias()));
         startKey.put("ms_time", new AttributeValue().withN(String.valueOf(recordRequest.getLastRecord().getTime())));
 
         QuerySpec spec = new QuerySpec()
                 .withKeyConditionExpression("alias = :v_id and ms_time BETWEEN :v AND :e")
                 .withValueMap(new ValueMap()
-                        .withString(":v_id", recordRequest.getUserId())
+                        .withString(":v_id", recordRequest.getAlias())
                         .withNumber(":v", recordRequest.getTimeStart())
                         .withNumber(":e", recordRequest.getTimeEnd()))
                 .withMaxResultSize(recordRequest.getLimit())
@@ -80,21 +76,18 @@ public class TrackDAO {
         if (lastKey != null) {
             hasMore = true;
         }
-        return new GetRecordResponse(records,hasMore);
+        return new GetRecordsResponse(records,hasMore);
 
 
     }
 
-    public void updateRecords(RecordRequest request){
-       //TODO could return meaningful message if needed
-        //dive into the outcome
-
-        DAO.updateRecord(TABLE_NAME, request);
+    public Response updateTrack(RecordRequest request){
+        return DAO.updateRecord(TABLE_NAME, request);
 
     }
 
-    public void deleteRecord(RecordRequest request){
-        DAO.deleteRecord(TABLE_NAME, request);
+    public Response deleteRecord(RecordRequest request){
+        return DAO.deleteRecord(TABLE_NAME, request);
     }
 
     public static void addRecordBatch(List<Record> records) {

@@ -13,8 +13,6 @@ import me.jinxinyu.caltracker.service.CheckoutCartServiceImpl;
 import me.jinxinyu.caltracker.service.request.CheckoutCartRequest;
 import me.jinxinyu.caltracker.service.request.PostBatchRequest;
 import me.jinxinyu.caltracker.service.response.ClearCartResponse;
-import me.jinxinyu.caltracker.service.response.GetRecordResponse;
-import me.jinxinyu.caltracker.service.response.Response;
 
 public class CartQueueHandler implements RequestHandler<SQSEvent, Void> {
     @Override

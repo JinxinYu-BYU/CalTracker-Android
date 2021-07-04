@@ -7,22 +7,20 @@ import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import me.jinxinyu.caltracker.domain.Record;
 import me.jinxinyu.caltracker.service.request.CheckoutCartRequest;
-import me.jinxinyu.caltracker.service.request.GetRecordRequest;
+import me.jinxinyu.caltracker.service.request.GetRecordsRequest;
 import me.jinxinyu.caltracker.service.request.RecordRequest;
-import me.jinxinyu.caltracker.service.response.GetRecordResponse;
-import me.jinxinyu.caltracker.service.response.RecordResponse;
+import me.jinxinyu.caltracker.service.response.ClearCartResponse;
+import me.jinxinyu.caltracker.service.response.GetRecordsResponse;
+import me.jinxinyu.caltracker.service.response.Response;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CartDAO{
-    private static String TABLE_NAME = "cal_track";
+    private static String TABLE_NAME = "cal_cart";
     private static final String HANDLE_ATTR = "alias";
     private static final String TIME_ATTR = "ms_time";
     private static final String FOOD_NAME_ATTR = "food_name";
@@ -37,30 +35,29 @@ public class CartDAO{
 
     private Table table = dynamoDB.getTable(TABLE_NAME);
 
-    public static RecordResponse addCart(RecordRequest request) {
-        return new RecordResponse(DAO.addRecord(TABLE_NAME, request));
+    public static Response addRecord(RecordRequest request) {
+        return DAO.addRecord(TABLE_NAME, request);
     }
 
-    public void updateRecords(RecordRequest request){
-        //TODO could return meaningful message if needed
-        //dive into the outcome
-        DAO.updateRecord(TABLE_NAME, request);
+    public Response updateRecords(RecordRequest request){
+        return DAO.updateRecord(TABLE_NAME, request);
     }
 
-    public void deleteRecord(RecordRequest request){
-        DAO.deleteRecord(TABLE_NAME, request);
+    public Response deleteRecord(RecordRequest request){
+        return DAO.deleteRecord(TABLE_NAME, request);
     }
 
-    public void checkoutCart(CheckoutCartRequest checkoutCartRequest){
+    public ClearCartResponse  checkoutCart(CheckoutCartRequest checkoutCartRequest){
         QuerySpec spec = new QuerySpec()
                 .withKeyConditionExpression("alias = :v_id")
                 .withValueMap(new ValueMap()
                         .withString(":v_id", checkoutCartRequest.getAlias()))
-                .withMaxResultSize(10)
+                .withMaxResultSize(25)
                 .withConsistentRead(true)
-                .withExclusiveStartKey(HANDLE_ATTR, checkoutCartRequest.getLastRecord().getAlias(), TIME_ATTR, checkoutCartRequest.getLastRecord().getTime());
+                .withExclusiveStartKey(HANDLE_ATTR, checkoutCartRequest.getAlias(), TIME_ATTR, checkoutCartRequest.getLastRecord().getTime());
 
         ItemCollection<QueryOutcome> items = table.query(spec);
+
         List<Record> records = new ArrayList<>();
         for(Item item:items){
             String alias = item.getString(HANDLE_ATTR);
@@ -81,10 +78,23 @@ public class CartDAO{
                 System.err.println(e.getMessage());
             }
         }
+        boolean hasMore = false;
+        try{
+            Map<String, AttributeValue> lastKey = items.getLastLowLevelResult().getQueryResult().getLastEvaluatedKey();
+            if (lastKey != null) {
+                hasMore = true;
+            }
+        }catch (Exception ignored){
+
+        }
+
+
+        return new ClearCartResponse(records,hasMore);
+
 
     }
 
-    public GetRecordResponse getRecords(GetRecordRequest request) {
+    public GetRecordsResponse getRecords(GetRecordsRequest request) {
         return DAO.getRecords(TABLE_NAME, request);
     }
 
