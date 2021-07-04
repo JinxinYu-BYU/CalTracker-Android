@@ -18,6 +18,15 @@ public class GetTimedRecordRequest {
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.token = token;
+        if(lastRecord.getTime() < timeStart){
+            this.lastRecord.setTime(timeStart);
+        }
+        //this request should not be sent by the front in this case.
+        // but I will leave the check here for the time of being
+        if(lastRecord.getTime() > timeEnd){
+            this.lastRecord.setTime(timeEnd);
+        }
+
     }
 
     public GetTimedRecordRequest() {

@@ -60,8 +60,8 @@ public class DAO {
 
     public static Response updateRecord(String tableName, RecordRequest request){
 
-        UpdateItemSpec updateItemSpecFollower = new UpdateItemSpec().withPrimaryKey(HANDLE_ATTR, request.getRecord().getAlias())
-                .withUpdateExpression("set food_name :r, calories :e")
+        UpdateItemSpec updateItemSpecFollower = new UpdateItemSpec().withPrimaryKey(HANDLE_ATTR, request.getRecord().getAlias(), TIME_ATTR, request.getRecord().getTime())
+                .withUpdateExpression("set food_name =:r, calories = :e")
                 .withValueMap(new ValueMap().withString(":r", request.getRecord().getFoodName()).withNumber(":e", request.getRecord().getCalories()))
                 .withReturnValues(ReturnValue.UPDATED_NEW);
 

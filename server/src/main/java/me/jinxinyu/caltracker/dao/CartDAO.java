@@ -15,6 +15,7 @@ import me.jinxinyu.caltracker.service.response.ClearCartResponse;
 import me.jinxinyu.caltracker.service.response.GetRecordsResponse;
 import me.jinxinyu.caltracker.service.response.Response;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class CartDAO{
         List<Record> records = new ArrayList<>();
         for(Item item:items){
             String alias = item.getString(HANDLE_ATTR);
-            long ms_time = Long.parseLong(item.getString(TIME_ATTR));
+            long ms_time = new Timestamp(System.currentTimeMillis()).getTime();
             String foodName = item.getString(FOOD_NAME_ATTR);
             int calories = item.getNumber(CAL_ATTR).byteValueExact();
             String imageURL = item.getString(IMAGE_ATTR);
