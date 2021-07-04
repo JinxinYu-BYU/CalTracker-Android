@@ -5,22 +5,32 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.google.gson.Gson;
 import me.jinxinyu.caltracker.dao.AuthsDAO;
 import me.jinxinyu.caltracker.net.DBRemoteException;
-import me.jinxinyu.caltracker.service.request.LogoutRequest;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
-public class ServiceImpl {
+import static javax.mail.Message.RecipientType.TO;
 
+public class ServiceImpl {
+    public class EmailConfig {
+        public String sender;
+        public String password;
+    }
 
     public static String validateToken(String token, String alias) {
         long diff = 72000000L;   // Tokens valid for one hour
@@ -106,5 +116,50 @@ public class ServiceImpl {
         stream.close();
 
         return url;
+    }
+
+    /** Email Service */
+    private static final String HOST_CONFIG = "mail.smtp.host";
+    private static final String HOST = "smtp.gmail.com";
+    private static final String PORT_CONFIG = "mail.smtp.port";
+    private static final String PORT = "465";
+    private static final String SSL_CONFIG = "mail.smtp.ssl.enable";
+    private static final String AUTH_CONFIG = "mail.smtp.auth";
+
+    private static final String CONFIG_PATH = "server/src/main/resources/emailConfig.json";
+
+    public static void sendEmail(String to, String subject, String body) throws MessagingException, FileNotFoundException {
+        Gson parser = new Gson();
+        EmailConfig config = parser.fromJson(new FileReader(CONFIG_PATH), ForgetPasswordServiceImpl.EmailConfig.class);
+
+        final String from = config.sender;
+        final String key = config.password;
+
+        // set up mail server
+        Properties properties = System.getProperties();
+        properties.put(HOST_CONFIG, HOST);
+        properties.put(PORT_CONFIG, PORT);
+        properties.put(SSL_CONFIG, "true");
+        properties.put(AUTH_CONFIG, "true");
+
+
+        // Get the session object
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                String username = from;
+                String password = key;
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.addRecipient(TO, new InternetAddress(to));
+
+        // Set email content
+        message.setSubject(subject);
+        message.setText(body);
+
+        Transport.send(message);
     }
 }
