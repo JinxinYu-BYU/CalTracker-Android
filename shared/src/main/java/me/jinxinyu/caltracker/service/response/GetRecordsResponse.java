@@ -15,19 +15,23 @@ public class GetRecordsResponse extends PagedResponse {
      *
      * @param message a message describing why the request was unsuccessful.
      */
-    public GetRecordsResponse(boolean success, String message) {
-        super(success, message, false);
+    public GetRecordsResponse(boolean success, String message, boolean hasMorePages, List<Record>records) {
+        super(success, message, hasMorePages);
+        this.records = records;
     }
 
-    /**
-     * Creates a response indicating that the corresponding request was successful.
-     *
-     * @param records the statuses to be included in the result.
-     * @param hasMorePages an indicator of whether more data is available for the request.
-     */
-    public GetRecordsResponse(List<Record> records, boolean hasMorePages) {
-        super(true, "Succssfully get records!", hasMorePages);
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
         this.records = records;
+    }
+
+    public GetRecordsResponse(GetRecordsResponse getRecordsResponse, String token) {
+        super(new Response(getRecordsResponse.getSuccess(), getRecordsResponse.getMessage()), token, getRecordsResponse.getHasMorePages());
+        this.records = getRecordsResponse.getRecords();
+
     }
 
 
@@ -46,7 +50,7 @@ public class GetRecordsResponse extends PagedResponse {
 
         return (Objects.equals(records, that.records) &&
                 Objects.equals(this.getMessage(), that.getMessage()) &&
-                this.isSuccess() == that.isSuccess());
+                this.getSuccess() == that.getSuccess());
     }
 
     @Override

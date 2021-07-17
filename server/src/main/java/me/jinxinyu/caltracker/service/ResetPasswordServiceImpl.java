@@ -46,7 +46,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             }
 
             /** 2. Update User Info in DB with new password */
-            UserDAO.resetPassword(generateHash(request.getPassword()));
+            UserDAO.resetPassword(request.getUserAlias(), generateHash(request.getPassword()));
             return new ResetPasswordResponse();
         } catch (DBRemoteException e) {
             return new ResetPasswordResponse(String.format(ERROR_MESSAGE,

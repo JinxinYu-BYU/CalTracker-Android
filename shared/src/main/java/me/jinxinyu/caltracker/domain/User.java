@@ -10,7 +10,7 @@ public class User implements Comparable<User>, Serializable {
 
     private String firstName;
     private String lastName;
-    private String userId;
+    private String alias;
     private String imageUrl;
     private int weight;
     private int height;
@@ -21,18 +21,18 @@ public class User implements Comparable<User>, Serializable {
      */
     public User() {}
 
-    public User(String firstName, String lastName, String userId, String imageURL) {
+    public User(String firstName, String lastName, String alias, String imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userId = userId;
+        this.alias = alias;
         this.imageUrl = imageURL;
     }
 
-    public User(String firstName, String lastName, String userId, String imageUrl,
+    public User(String firstName, String lastName, String alias, String imageUrl,
                 int weight, int height, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userId = userId;
+        this.alias = alias;
         this.imageUrl = imageUrl;
         this.weight = weight;
         this.height = height;
@@ -83,12 +83,12 @@ public class User implements Comparable<User>, Serializable {
         return String.format("%s %s", firstName, lastName);
     }
 
-    public String getUserId() {
-        return userId;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getImageUrl() {
@@ -104,12 +104,12 @@ public class User implements Comparable<User>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userId.equals(user.userId);
+        return alias.equals(user.alias);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(alias);
     }
 
     @Override
@@ -117,13 +117,13 @@ public class User implements Comparable<User>, Serializable {
         return "User{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", alias='" + userId + '\'' +
+                ", alias='" + alias + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 
     @Override
     public int compareTo(User user) {
-        return this.getUserId().compareTo(user.getUserId());
+        return this.getAlias().compareTo(user.getAlias());
     }
 }

@@ -22,7 +22,7 @@ public class LoginServiceImpl extends ServiceImpl implements LoginService {
 
         try {
             LoginResponse response = userDAO.login(request);
-            if (response.isSuccess()) {
+            if (response.getSuccess()) {
                 String token = UUID.randomUUID().toString();
                 long currTime = new Timestamp(System.currentTimeMillis()).getTime();
                 authsDAO.addToken(token, currTime, request.getUsername());

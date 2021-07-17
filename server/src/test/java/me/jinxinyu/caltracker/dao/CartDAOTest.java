@@ -29,7 +29,7 @@ class CartDAOTest {
 //        cartDAO.getRecords(getRecordRequest);
 
         AuthsDAO authsDAO = new AuthsDAO();
-        authsDAO.addToken("abcdef", new Timestamp(System.currentTimeMillis()).getTime(), "user0");
+        authsDAO.addToken("abcd", new Timestamp(System.currentTimeMillis()).getTime(), "user0");
         Record record =  new Record("user", "item0", 0, 0 );
         RecordRequest recordRequest = new RecordRequest(record, "abcde", "cart");
         String json = JsonSerializer.serialize(recordRequest);

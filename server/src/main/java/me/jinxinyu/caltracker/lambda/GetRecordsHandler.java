@@ -7,6 +7,8 @@ import me.jinxinyu.caltracker.service.GetRecordsServiceImpl;
 import me.jinxinyu.caltracker.service.request.GetRecordsRequest;
 import me.jinxinyu.caltracker.service.response.GetRecordsResponse;
 
+import java.util.LinkedList;
+
 
 public class GetRecordsHandler implements RequestHandler<GetRecordsRequest, GetRecordsResponse> {
     @Override
@@ -21,7 +23,7 @@ public class GetRecordsHandler implements RequestHandler<GetRecordsRequest, GetR
             case "fav":
                 return getFavList(request);
             default:
-                return new GetRecordsResponse(false,"Invalid table name");
+                return new GetRecordsResponse(false,"Invalid table name", false, new LinkedList<>());
         }
 
 
