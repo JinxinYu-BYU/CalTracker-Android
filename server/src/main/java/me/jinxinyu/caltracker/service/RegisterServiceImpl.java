@@ -29,7 +29,7 @@ public class RegisterServiceImpl extends ServiceImpl implements RegisterService 
         }
         try {
             RegisterResponse response = userDAO.register(request);
-            if (response.isSuccess()) {
+            if (response.getSuccess()) {
                 String token = UUID.randomUUID().toString();
                 long currTime = new Timestamp(System.currentTimeMillis()).getTime();
                 authsDAO.addToken(token, currTime, request.getUserName());

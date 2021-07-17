@@ -20,6 +20,8 @@ public class RegisterHandler implements RequestHandler<RegisterRequest, Register
     }
 
     public static void main(String[] args) {
-        RegisterRequest r = new RegisterRequest("mike", "wu", "mike1", "123", "", 40, 180, 20);
+        RegisterRequest r = new RegisterRequest("mike", "wu", "siriusyu@live.com", "123", "", 40, 180, 20);
+        RegisterHandler registerHandler = new RegisterHandler();
+        registerHandler.handleRequest(r, null);
     }
 }

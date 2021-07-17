@@ -37,24 +37,23 @@ public class ServiceImpl {
         long newTokenTime = 3000000L; //after 50 minutes we generate a new token
 
         if (token == null || token.isEmpty()) {
-            //TODO: is runtime exception a good practice?
-            throw new RuntimeException("401");
+           return null;
         }
-
 
         try {
             AuthsDAO authsDAO = new AuthsDAO();
             Map.Entry<String, String> resp = authsDAO.getToken(token);
+            //token does not exist in the table
             if (resp == null || resp.getKey() == null || resp.getValue() == null) {
-                throw new RuntimeException("401");
+                return null;
             }
-
-            if (!resp.getKey().equals(alias)) throw new RuntimeException("401");
+            //token does not match the user in DB
+            if (!resp.getKey().equals(alias)) return null;
 
             long timestamp = Long.parseLong(resp.getValue());
             long curr_time = new Timestamp(System.currentTimeMillis()).getTime();
 
-
+            //after 50 minutes but under 60 minutes, generate a new token for the user
             if (curr_time - timestamp > newTokenTime && curr_time - timestamp < diff) {
                 String newToken = UUID.randomUUID().toString();
                 long new_curr_time = new Timestamp(System.currentTimeMillis()).getTime();
@@ -62,14 +61,12 @@ public class ServiceImpl {
                 authsDAO.addToken(newToken, new_curr_time, alias);
                 return newToken;
             }
-
+            //if the token has been past 60 minutes, log the user out
             if (curr_time - timestamp > diff) {
                 System.out.println("invalid token: the token doesn't exist");
-
                 // logout user
                 authsDAO.deleteToken(token);
-
-                throw new RuntimeException("401");
+                return null;
             }
         } catch (DBRemoteException e) {
             throw new RuntimeException(e.getMessage());
@@ -125,8 +122,9 @@ public class ServiceImpl {
     private static final String PORT = "465";
     private static final String SSL_CONFIG = "mail.smtp.ssl.enable";
     private static final String AUTH_CONFIG = "mail.smtp.auth";
-
-    private static final String CONFIG_PATH = "server/src/main/resources/emailConfig.json";
+//
+//    private static final String CONFIG_PATH = "server/src/main/resources/emailConfig.json";
+    private static final String CONFIG_PATH ="src/main/res/emailConfig.json";
 
     public static void sendEmail(String to, String subject, String body) throws MessagingException, FileNotFoundException {
         Gson parser = new Gson();

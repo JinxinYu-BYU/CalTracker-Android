@@ -15,6 +15,7 @@ public class LogoutServiceImpl extends ServiceImpl implements LogoutService {
     public LogoutResponse logout(LogoutRequest request) {
         try {
             AuthsDAO authsDAO = new AuthsDAO();
+            //TODO: verify if the user matches the token owner
             authsDAO.deleteToken(request.getAuthToken());
             return new LogoutResponse();
         } catch (DBRemoteException e) {

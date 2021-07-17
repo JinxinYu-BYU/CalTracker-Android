@@ -4,6 +4,7 @@ public class Response {
 
     private boolean success;
     private String message;
+    private String token;
 
 //
 //    Response(String message) {
@@ -25,6 +26,20 @@ public class Response {
         this.message = message;
     }
 
+    public Response(Response response, String token) {
+        this.success = response.success;
+        this.message = response.message;
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -36,7 +51,7 @@ public class Response {
      *
      * @return the success indicator.
      */
-    public boolean isSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 

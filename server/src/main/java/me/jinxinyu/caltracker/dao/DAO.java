@@ -18,10 +18,7 @@ import me.jinxinyu.caltracker.service.request.RecordRequest;
 import me.jinxinyu.caltracker.service.response.GetRecordsResponse;
 import me.jinxinyu.caltracker.service.response.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class DAO {
@@ -138,11 +135,11 @@ public class DAO {
             if (lastKey != null) {
                 hasMore = true;
             }
-            return new GetRecordsResponse(records, hasMore);
+            return new GetRecordsResponse(true, "Successfully get the records!", hasMore, records);
         } catch (AmazonServiceException ase) {
-            return new GetRecordsResponse(false, ase.getErrorMessage());
+            return new GetRecordsResponse(false, ase.getErrorMessage(), false, new LinkedList<>());
         } catch (AmazonClientException ace) {
-            return new GetRecordsResponse(false, ace.getMessage());
+            return new GetRecordsResponse(false, ace.getMessage(), false, new LinkedList<>());
         }
 
 

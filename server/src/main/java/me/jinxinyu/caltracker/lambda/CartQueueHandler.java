@@ -30,7 +30,7 @@ public class CartQueueHandler implements RequestHandler<SQSEvent, Void> {
             while (true) {
                 CheckoutCartRequest checkoutCartRequest = new CheckoutCartRequest(request.getAlias(),lastRecord, request.getAuthToken());
                 ClearCartResponse response = service.checkoutCart(checkoutCartRequest);
-                if (!response.isSuccess()) {
+                if (!response.getSuccess()) {
                     throw new RuntimeException("500");
                 }
                 PostBatchRequest batch = new PostBatchRequest(response.getRecordss(), request.getAuthToken());

@@ -76,7 +76,8 @@ public class TrackDAO {
         if (lastKey != null) {
             hasMore = true;
         }
-        return new GetRecordsResponse(records,hasMore);
+        //TODO: add a try catch for exceptions
+        return new GetRecordsResponse(true, "Successfully get timed records", hasMore, records);
 
     }
 

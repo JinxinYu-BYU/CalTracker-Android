@@ -7,13 +7,13 @@ public class PagedResponse extends Response {
 
     private final boolean hasMorePages;
 
-//    PagedResponse(boolean success, boolean hasMorePages) {
-//        super();
-//        this.hasMorePages = hasMorePages;
-//    }
-
     PagedResponse(boolean success, String message, boolean hasMorePages) {
         super(success, message);
+        this.hasMorePages = hasMorePages;
+    }
+
+    public PagedResponse(Response response, String token, boolean hasMorePages) {
+        super(response, token);
         this.hasMorePages = hasMorePages;
     }
 

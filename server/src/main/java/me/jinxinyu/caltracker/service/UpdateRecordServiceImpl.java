@@ -10,20 +10,29 @@ import me.jinxinyu.caltracker.service.response.Response;
 public class UpdateRecordServiceImpl extends ServiceImpl implements UpdateRecordService{
     @Override
     public Response updateTrack(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getTrackDAO().updateTrack(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getTrackDAO().updateTrack(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     @Override
     public Response updateCart(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getCartDAO().updateRecords(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getCartDAO().updateRecords(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     @Override
     public Response updateFavList(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getFavDAO().updateRecords(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getFavDAO().updateRecords(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     private TrackDAO getTrackDAO() {return new TrackDAO();}

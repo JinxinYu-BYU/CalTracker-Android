@@ -9,6 +9,10 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 
+import com.amazonaws.services.dynamodbv2.document.UpdateItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import me.jinxinyu.caltracker.domain.User;
 import me.jinxinyu.caltracker.net.DBRemoteException;
 import me.jinxinyu.caltracker.service.request.LoginRequest;
@@ -112,7 +116,7 @@ public class UserDAO {
     // May need modifications
     public DeleteAccountResponse delete(User user) throws DBRemoteException {
         try {
-            TABLE.deleteItem(HANDLE_ATTR, user.getUserId());
+            TABLE.deleteItem(HANDLE_ATTR, user.getAlias());
             return new DeleteAccountResponse();
         } catch (AmazonServiceException ase) {
             throw new DBRemoteException(ase.getMessage(), "Service Exception: " + ase.getErrorType());
@@ -131,9 +135,13 @@ public class UserDAO {
         }
     }
 
-    public static void resetPassword(String password) throws DBRemoteException {
+    public static void resetPassword(String alias, String password) throws DBRemoteException {
         try {
-            TABLE.updateItem(PASSWORD_ATTR, password);
+            UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey(HANDLE_ATTR, alias)
+                    .withUpdateExpression("set password = :r")
+                    .withValueMap(new ValueMap().withString(":r", password))
+                    .withReturnValues(ReturnValue.UPDATED_NEW);
+            UpdateItemOutcome outcome = TABLE.updateItem(updateItemSpec);
         } catch (AmazonServiceException ase) {
             throw new DBRemoteException(ase.getMessage(), "Service Exception: " + ase.getErrorType());
         } catch (AmazonClientException ace) {

@@ -9,20 +9,33 @@ import me.jinxinyu.caltracker.service.response.Response;
 public class DeleteRecordServiceImpl extends ServiceImpl implements DeleteRecordService{
     @Override
     public Response deleteTrack(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getTrackDAO().deleteRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null){
+            return new Response(getTrackDAO().deleteRecord(request), newToken);
+        }else {
+            return new Response(false, "Invalid Token!");
+        }
+
     }
 
     @Override
     public Response deleteCart(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getCartDAO().deleteRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null){
+            return new Response(getCartDAO().deleteRecord(request), newToken);
+        }else {
+            return new Response(false, "Invalid Token!");
+        }
     }
 
     @Override
     public Response deleteFavList(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getFavDAO().deleteRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null){
+            return new Response(getFavDAO().deleteRecord(request), newToken);
+        }else {
+            return new Response(false, "Invalid Token!");
+        }
     }
 
     private TrackDAO getTrackDAO() {return new TrackDAO();}

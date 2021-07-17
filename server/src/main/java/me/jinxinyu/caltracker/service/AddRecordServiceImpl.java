@@ -10,25 +10,35 @@ import me.jinxinyu.caltracker.service.response.Response;
 public class AddRecordServiceImpl extends ServiceImpl implements AddRecordService{
     @Override
     public Response addTrack(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getTrackDAO().addRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getTrackDAO().addRecord(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     @Override
     public Response addCart(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getCartDAO().addRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getCartDAO().addRecord(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     @Override
     public Response addFavList(RecordRequest request) {
-        validateToken(request.getAuthToken(), request.getRecord().getAlias());
-        return getFavDAO().addRecord(request);
+        String newToken = validateToken(request.getAuthToken(), request.getRecord().getAlias());
+        if(newToken != null)
+            return new Response(getFavDAO().addRecord(request), newToken);
+        else
+            return new Response(false, "Invalid Token!");
     }
 
     public void batchTrackWrite(PostBatchRequest request) {
-        validateToken(request.getToken(), request.getAlias());
-        getTrackDAO().addRecordBatch(request.getRecords());
+        String newToken = validateToken(request.getToken(), request.getAlias());
+        if(newToken != null)
+            getTrackDAO().addRecordBatch(request.getRecords());
     }
 
     private TrackDAO getTrackDAO() {return new TrackDAO();}
